@@ -34,8 +34,11 @@ class feedProcess implements ShouldQueue
     public function handle()
     {
         //
+        $links = array("TWTR", "AAPL", "INTC");
+        foreach($links as $link){
         $client = new Client();
-        $url = 'https://feeds.finance.yahoo.com/rss/2.0/headline?s=TWTR&region=US&lang=en-US';
+        $url = "https://feeds.finance.yahoo.com/rss/2.0/headline?s=$link&region=US&lang=en-US";
+        echo $url;
         $page = $client->request('GET', $url);
         $res[] = $page->filter('item')->each(function ($item){
            $feed = new feed;
@@ -45,6 +48,7 @@ class feedProcess implements ShouldQueue
            $feed->link = $item->filter('link')->text();
            $feed->description = $item->filter('description')->text();
            $feed->save();
-        });
+        });  
+     }
     }
 }
